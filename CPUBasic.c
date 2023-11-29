@@ -16,15 +16,19 @@ void executeInstruction(const char *opcode, const char *reg, int value) {
     if (strcmp(opcode, "SET") == 0) {
         int* reg_ptr = getRegisterPointer(reg);
         *reg_ptr = value;
-    } else if (strcmp(opcode, "LDR") == 0) {
+    }
+    else if (strcmp(opcode, "LDR") == 0) {
         if (strcmp(reg, "ACC") == 0) {
-            accumulator = value; 
+            int* reg_ptr = getRegisterPointer("D3");
+            if (reg_ptr != NULL) {
+                accumulator = memorySize[*reg_ptr];
+            }
         } else {
-    
             int* reg_ptr = getRegisterPointer(reg);
             accumulator = *reg_ptr;
         }
-    }else if (strcmp(opcode, "ADD") == 0) {
+    }
+    else if (strcmp(opcode, "ADD") == 0) {
     int* reg_ptr = getRegisterPointer(reg);
 
     // Añade el valor al acuulador
@@ -56,7 +60,7 @@ void executeInstruction(const char *opcode, const char *reg, int value) {
         } else {
             // Muestra
             int* reg_ptr = getRegisterPointer(reg);
-            printf("Output: %d\n", *reg_ptr);
+            //printf("Output: %d\n", *reg_ptr);
         }
     } else if (strcmp(opcode, "END") == 0) {
         exit(0);
@@ -89,13 +93,14 @@ int main() {
         char reg[4];
         int value;
 
-        if (sscanf(line, "%4s %3s %d", opcode, reg, &value) == 3) {
-            printf("Read: %s %s %d\n", opcode, reg, value); 
-            printf("Antes de ejecutar:\n Acumulador = %d, D2 = %d, D3 = %d, D5 = %d, D8 = %d\n",
-                    accumulator, D2, D3, D5, D8);
+        if (sscanf(line, "%4s %3s %d", opcode, reg, &value) >= 2) {
+            printf("Leyendo instruccion: %s %s %d\n", opcode, reg, value); 
+            //printf("Antes de ejecutar:\n D2 = %d, D3 = %d, D5 = %d, D8 = %d\n",
+            //         D2, D3, D5, D8);
             executeInstruction(opcode, reg, value);
-            printf("Despues de ejecutar:\n Acumulador = %d, D2 = %d, D3 = %d, D5 = %d, D8 = %d\n",
-                    accumulator, D2, D3, D5, D8);
+            printf("Al ejecutar:\n D2 = %d, D3 = %d, D5 = %d, D8 = %d\n",
+                     D2, D3, D5, D8);
+            printf("El acumulador es:\t %d\n", accumulator);
         }
     }
 
